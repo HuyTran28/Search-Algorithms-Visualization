@@ -5,41 +5,53 @@ from gui.renderer import draw_grid
 from algorithms.base import search  # unified search
 
 def visual_step():
-    draw_grid(win, grid, WIDTH, HEIGHT)
+    draw_grid(win, grid, CELL_SIZE)
 
 # Grid size and window setup
 WIDTH, HEIGHT = 600, 600
 ROWS, COLS = 30, 30
-    
+CELL_SIZE = WIDTH // COLS
+
 pygame.init()
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pathfinding Visualization")
 
-# Create grid and define start/goal
+# Create grid
 grid = Grid(ROWS, COLS)
+
+# Set start and goal
 start = grid.get_node(5, 5)
 goal = grid.get_node(25, 25)
 problem = Problem(grid, start, goal)
 
-# Optional: Add obstacles
-for i in range(10, 20):
-    grid.get_node(15, i).walkable = False
+# Apply terrain map
+def set_tile(node, tile_type):
+    node.tile_type = tile_type
+    node.cost = node.get_cost_from_tile(tile_type)
+    node.walkable = tile_type != "wall"
 
-# Run search and get result with stats
-result = search(problem, algorithm="astar", draw_fn=lambda: visual_step())
+# Sand area
+for y in range(10, 20):
+    for x in range(10, 15):
+        set_tile(grid.get_node(y, x), "sand")
 
-# Print search statistics
-# if result.path:
-#     print("✅ Path found!")
-# else:
-#     print("❌ No path found.")
+# Water area
+for y in range(5, 10):
+    for x in range(20, 25):
+        set_tile(grid.get_node(y, x), "water")
 
-# print(f"🔍 Nodes explored: {result.explored_count}")
-# print(f"💰 Path cost: {result.path_cost}")
-# print(f"⏱️ Time taken: {result.time_ms:.2f} ms")
-# print(f"🧠 Memory used: {result.memory_kb:.2f} KB")
+# Wall
+for i in range(0, 10):
+    set_tile(grid.get_node(15, i), "wall")
 
-# Keep window open until closed by user
+# Set start and goal (override any terrain if needed)
+set_tile(start, "grass")
+set_tile(goal, "grass")
+
+# Run search
+result = search(problem, algorithm="astar", draw_fn=visual_step)
+
+# Main loop
 running = True
 while running:
     for event in pygame.event.get():

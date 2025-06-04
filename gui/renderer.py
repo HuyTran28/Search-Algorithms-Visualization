@@ -1,38 +1,41 @@
 import pygame
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-TURQUOISE = (64, 224, 208)
-GREEN = (100, 255, 100)
-GRAY = (200, 200, 200)
-RED = (255, 100, 100)
+COLOR_MAP = {
+    "grass": (255, 255, 255),
+    "sand": (255, 255, 100),
+    "water": (100, 100, 255),
+    "wall": (0, 0, 0)
+}
 
-def draw_grid(win, grid, width, height):
-    win.fill(WHITE)
-    rows = grid.rows
-    cols = grid.cols
-    cell_width = width // cols
-    cell_height = height // rows
+MARKER_COLOR = {
+    "in_path": (255, 50, 50),     # red dot
+    "explored": (255, 165, 0),    # orange dot
+    "in_open": (160, 32, 240)     # purple dot
+}
 
+def draw_grid(screen, grid, cell_size):
     for row in grid.grid:
         for node in row:
-            color = WHITE  
-            if not node.walkable:
-                color = BLACK      
-            elif node.in_path:
-                color = TURQUOISE 
+            x = node.col * cell_size
+            y = node.row * cell_size
+
+            # Draw base terrain color
+            base_color = COLOR_MAP.get(node.tile_type, (255, 255, 255))
+            pygame.draw.rect(screen, base_color, (x, y, cell_size, cell_size))
+
+            # Draw marker dot or outline in center of cell
+            center_x = x + cell_size // 2
+            center_y = y + cell_size // 2
+            radius = cell_size // 6
+
+            if node.in_path:
+                pygame.draw.circle(screen, MARKER_COLOR["in_path"], (center_x, center_y), radius)
             elif node.explored:
-                color = RED 
+                pygame.draw.circle(screen, MARKER_COLOR["explored"], (center_x, center_y), radius)
             elif node.in_open:
-                color = GREEN
+                pygame.draw.circle(screen, MARKER_COLOR["in_open"], (center_x, center_y), radius)
 
-            pygame.draw.rect(win, color, (node.col * cell_width, node.row * cell_height, cell_width, cell_height))
-
-    # Draw grid lines
-    for x in range(0, width, cell_width):
-        pygame.draw.line(win, GRAY, (x, 0), (x, height))
-    for y in range(0, height, cell_height):
-        pygame.draw.line(win, GRAY, (0, y), (width, y))
+            # Draw grid border
+            pygame.draw.rect(screen, (200, 200, 200), (x, y, cell_size, cell_size), 1)
 
     pygame.display.update()
-

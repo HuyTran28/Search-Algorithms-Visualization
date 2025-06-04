@@ -1,22 +1,38 @@
 class Node:
-    def __init__(self, row, col, walkable=True):
+    def __init__(self, row, col, tile_type="grass"):
         self.row = row
         self.col = col
-        self.walkable = walkable
-        self.neighbors = []
+        self.tile_type = tile_type
+        self.cost = self.get_cost_from_tile(tile_type)
+        self.walkable = tile_type != "wall"
+
         self.parent = None
+        self.g = float('inf')  # cost from start
+        self.h = 0             # heuristic
+        self.f = float('inf')  # total cost
 
-        self.g = float("inf")
-        self.h = 0
-        self.f = float("inf")
-
-        # Visualization states
-        self.in_open = False
+        # for visualization
         self.explored = False
+        self.in_open = False
         self.in_path = False
 
+    def get_cost_from_tile(self, tile_type):
+        cost_map = {
+            "grass": 1,
+            "sand": 3,
+            "water": 5,
+            "wall": float('inf')  # walls are impassable
+        }
+        return cost_map.get(tile_type, 1)
+
     def get_pos(self):
-        return self.row, self.col
+        return (self.col, self.row)
+
+    def __eq__(self, other):
+        return self.get_pos() == other.get_pos()
 
     def __lt__(self, other):
         return self.f < other.f
+
+    def __hash__(self):
+        return hash(self.get_pos())

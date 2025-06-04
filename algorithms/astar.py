@@ -47,8 +47,8 @@ def astar(problem, step_callback):
         for neighbor in problem.get_neighbors(current):
             if not neighbor.walkable:
                 continue
-
-            tentative_g = current.g + 1
+            
+            tentative_g = current.g + neighbor.cost
             if tentative_g < neighbor.g:
                 neighbor.parent = current
                 neighbor.g = tentative_g
