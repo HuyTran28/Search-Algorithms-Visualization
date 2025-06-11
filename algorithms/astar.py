@@ -45,9 +45,6 @@ def astar(problem, step_callback):
             return path, explored_count, cost
 
         for neighbor in problem.get_neighbors(current):
-            if not neighbor.walkable:
-                continue
-            
             tentative_g = current.g + neighbor.cost
             if tentative_g < neighbor.g:
                 neighbor.parent = current
@@ -59,6 +56,6 @@ def astar(problem, step_callback):
                     heapq.heappush(open_set, (neighbor.f, neighbor))
                     open_set_hash.add(neighbor)
                     neighbor.in_open = True
-                    step_callback()
+        step_callback()
 
     return None, explored_count, 0

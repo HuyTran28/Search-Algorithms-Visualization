@@ -1,60 +1,73 @@
 import pygame
-from core.grid import Grid
-from core.problem import Problem
-from gui.renderer import draw_grid
-from algorithms.base import search  # unified search
-
-def visual_step():
-    draw_grid(win, grid, CELL_SIZE)
-
-# Grid size and window setup
-WIDTH, HEIGHT = 600, 600
-ROWS, COLS = 30, 30
-CELL_SIZE = WIDTH // COLS
 
 pygame.init()
-win = pygame.display.set_mode((WIDTH, HEIGHT))
+
+from core.grid import Grid
+from core.problem import Problem
+
+from algorithms.base import search  
+
+from gui.interface import Interface, Dropdown
+from gui.renderer import draw_grid
+from gui.grid_selector import GridSelector
+
+from utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, BUTTON_WIDTH, ROWS, COLS, FONT
+from utils.algorithms_registry import ALGORITHMS
+from utils.action import set_algorithm, regenerate_maze, run_selected
+
+import threading
+draw_lock = threading.Lock()
+
+window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Pathfinding Visualization")
+
+def visual_step():
+    with draw_lock:
+        draw_grid(window, grid, CELL_SIZE, problem.start, problem.goal)
+
+# Interface setup
+interface = Interface()
 
 # Create grid
 grid = Grid(ROWS, COLS)
+grid.generate_maze()
 
 # Set start and goal
-start = grid.get_node(5, 5)
-goal = grid.get_node(25, 25)
-problem = Problem(grid, start, goal)
+problem = Problem(grid, None, None)
 
-# Apply terrain map
-def set_tile(node, tile_type):
-    node.tile_type = tile_type
-    node.cost = node.get_cost_from_tile(tile_type)
-    node.walkable = tile_type != "wall"
+# NEW: Initialize the GridSelector, passing it the grid and problem objects
+grid_selector = GridSelector(grid, problem)
 
-# Sand area
-for y in range(10, 20):
-    for x in range(10, 15):
-        set_tile(grid.get_node(y, x), "sand")
+# Dropdown setup
+dropdown = Dropdown(
+    rect=(620, 50, 160, 40),
+    options=[(label, name) for label, name in ALGORITHMS.items()],
+    font=FONT,
+    on_select=set_algorithm
+)
 
-# Water area
-for y in range(5, 10):
-    for x in range(20, 25):
-        set_tile(grid.get_node(y, x), "water")
-
-# Wall
-for i in range(0, 10):
-    set_tile(grid.get_node(15, i), "wall")
-
-# Set start and goal (override any terrain if needed)
-set_tile(start, "grass")
-set_tile(goal, "grass")
-
-# Run search
-result = search(problem, algorithm="astar", draw_fn=visual_step)
+# Interface buttons
+interface = Interface()
+interface.add_button((620, 240, 160, 40), (100, 100, 200), "Maze", regenerate_maze(grid))
+interface.add_button((620, 120, 160, 40), (100, 200, 100), "Run", run_selected(problem, visual_step))
 
 # Main loop
 running = True
 while running:
+    window.fill((240, 240, 240))
+
+    with draw_lock:
+        draw_grid(window, grid, CELL_SIZE, problem.start, problem.goal)
+    interface.draw(window, FONT)
+    dropdown.draw(window)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            grid_selector.handle_event(event, event.pos)
+            if event.button == 1:
+                dropdown.handle_event(event)
+                interface.handle_click(event.pos)
+    pygame.display.update()
 pygame.quit()

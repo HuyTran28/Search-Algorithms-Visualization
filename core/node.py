@@ -4,7 +4,6 @@ class Node:
         self.col = col
         self.tile_type = tile_type
         self.cost = self.get_cost_from_tile(tile_type)
-        self.walkable = tile_type != "wall"
 
         self.parent = None
         self.g = float('inf')  # cost from start
@@ -16,12 +15,19 @@ class Node:
         self.in_open = False
         self.in_path = False
 
+    @property
+    def tile_type(self):
+        return self._tile_type
+
+    @tile_type.setter
+    def tile_type(self, value):
+        self._tile_type = value
+        self.cost = self.get_cost_from_tile(value)
+
     def get_cost_from_tile(self, tile_type):
         cost_map = {
             "grass": 1,
-            "sand": 3,
-            "water": 5,
-            "wall": float('inf')  # walls are impassable
+            "wall": 10
         }
         return cost_map.get(tile_type, 1)
 
