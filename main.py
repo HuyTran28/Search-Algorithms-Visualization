@@ -12,7 +12,7 @@ from gui.renderer import draw_grid
 from gui.grid_selector import GridSelector
 
 from utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, BUTTON_WIDTH, ROWS, COLS, FONT
-from utils.algorithms_registry import ALGORITHMS
+from algorithms.algorithms_registry import ALGORITHMS
 from utils.action import set_algorithm, regenerate_maze, run_selected
 
 import threading
@@ -41,7 +41,7 @@ grid_selector = GridSelector(grid, problem)
 # Dropdown setup
 dropdown = Dropdown(
     rect=(620, 50, 160, 40),
-    options=[(label, name) for label, name in ALGORITHMS.items()],
+    options=[(name, name) for name in ALGORITHMS.keys()],
     font=FONT,
     on_select=set_algorithm
 )

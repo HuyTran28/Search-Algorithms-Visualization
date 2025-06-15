@@ -1,35 +1,25 @@
 import heapq
+from algorithms.utils import reconstruct_path
 
-def heuristic(n1, n2):
+def Manhattan_distance(n1, n2):
     return abs(n1.row - n2.row) + abs(n1.col - n2.col)
-
-def reconstruct_path(end_node):
-    path = []
-    cost = 0
-    current = end_node
-    while current.parent:
-        path.append(current)
-        cost += 1
-        current = current.parent
-    path.reverse()
-    return path, cost
 
 def astar(problem, step_callback):
     start = problem.start
     goal = problem.goal
 
-    open_set = []
-    heapq.heappush(open_set, (0, start))
-    open_set_hash = {start}
+    frontier = []
+    heapq.heappush(frontier, (0, start))
+    frontier_hash = {start}
 
     start.g = 0
-    start.f = heuristic(start, goal)
+    start.f = Manhattan_distance(start, goal)
 
     explored_count = 0
 
-    while open_set:
-        current = heapq.heappop(open_set)[1]
-        open_set_hash.remove(current)
+    while frontier:
+        current = heapq.heappop(frontier)[1]
+        frontier_hash.remove(current)
 
         current.explored = True
         explored_count += 1
@@ -49,12 +39,12 @@ def astar(problem, step_callback):
             if tentative_g < neighbor.g:
                 neighbor.parent = current
                 neighbor.g = tentative_g
-                neighbor.h = heuristic(neighbor, goal)
+                neighbor.h = Manhattan_distance(neighbor, goal)
                 neighbor.f = neighbor.g + neighbor.h
 
-                if neighbor not in open_set_hash:
-                    heapq.heappush(open_set, (neighbor.f, neighbor))
-                    open_set_hash.add(neighbor)
+                if neighbor not in frontier_hash:
+                    heapq.heappush(frontier, (neighbor.f, neighbor))
+                    frontier_hash.add(neighbor)
                     neighbor.in_open = True
         step_callback()
 

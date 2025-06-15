@@ -10,11 +10,13 @@ class Grid:
     def reset(self):
         for row in self.grid:
             for node in row:
-                node.walkable = True
                 node.parent = None
                 node.g = float("inf")
                 node.h = 0
                 node.f = float("inf")
+                node.explored = False
+                node.in_open = False
+                node.in_path = False
 
     def get_node(self, row, col):
         return self.grid[row][col]
@@ -74,4 +76,3 @@ class Grid:
                 # Remove wall between (r1,c1) and (r2,c2)
                 wr, wc = (r1 + r2) // 2, (c1 + c2) // 2
                 self.grid[wr][wc].tile_type = self.grid[r2][c2].tile_type = "grass"
-
