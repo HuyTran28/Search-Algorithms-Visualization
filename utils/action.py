@@ -18,5 +18,15 @@ def run_selected(problem, draw_fn):
             search_lock.release()
     return lambda: threading.Thread(target=run).start()
 
-def regenerate_maze(grid):
-    return lambda: grid.generate_maze()
+def regenerate_maze(problem):
+    def regenerate():
+        if not search_lock.acquire(blocking=False):
+            return  # Another search is running
+        try:
+            problem.grid.reset()
+            problem.start = None
+            problem.goal = None
+            problem.grid.generate_maze()
+        finally:
+            search_lock.release()
+    return regenerate

@@ -2,8 +2,6 @@ import pygame
 from utils.constants import COLORS
 from utils.constants import TILE_IMAGES, COLORS, MARKER_COLOR, CELL_SIZE
 
-for key in TILE_IMAGES:
-    TILE_IMAGES[key] = pygame.transform.scale(TILE_IMAGES[key], (CELL_SIZE, CELL_SIZE))
 
 def draw_grid(screen, grid, start_node=None, goal_node=None):
     for row in grid.grid:
@@ -20,20 +18,16 @@ def draw_grid(screen, grid, start_node=None, goal_node=None):
             if tile_img:
                 screen.blit(tile_img, (x, y))
 
-            # Draw marker dot or outline in center of cell
-            center_x = x + CELL_SIZE // 2
-            center_y = y + CELL_SIZE // 2
-            radius = CELL_SIZE // 6
-
+            overlay = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
             if node.in_path:
-                pygame.draw.circle(screen, MARKER_COLOR["in_path"], (center_x, center_y), radius)
+                overlay.fill(MARKER_COLOR["in_path"])
             elif node.explored:
-                pygame.draw.circle(screen, MARKER_COLOR["explored"], (center_x, center_y), radius)
+                overlay.fill(MARKER_COLOR["explored"])
             elif node.in_open:
-                pygame.draw.circle(screen, MARKER_COLOR["in_open"], (center_x, center_y), radius)
-
-            # Draw start and goal nodes on top of everything else for clear visibility
-            # Check if start_node/goal_node is not None before comparing
+                overlay.fill(MARKER_COLOR["in_open"])
+            screen.blit(overlay, (x, y))
+            
+            # Draw start and goal markers
             if start_node is not None and node == start_node:
                 tile_img = TILE_IMAGES.get("start")
                 if tile_img:
@@ -44,4 +38,4 @@ def draw_grid(screen, grid, start_node=None, goal_node=None):
                     screen.blit(tile_img, (x, y))
 
             # Draw grid border
-            pygame.draw.rect(screen, (200, 200, 200), (x, y, CELL_SIZE, CELL_SIZE), 1)
+            pygame.draw.rect(screen, COLORS["LIGHT_GRAY"], (x, y, CELL_SIZE, CELL_SIZE), 1)

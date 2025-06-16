@@ -52,9 +52,8 @@ def IDAstar(problem, step_callback, f_max=100000):
         if result is not None:
             path, cost = reconstruct_path(result)
             for node in path:
-                node.explored = True
+                node.in_path = True
                 step_callback()
-            
             return path, explored_count, cost
         if new_limit == f_max or new_limit == float('inf'):
             return None, explored_count, 0

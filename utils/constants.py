@@ -9,22 +9,20 @@ COLS = 40
 CELL_SIZE = GRID_SIZE // COLS
 FONT = pygame.font.SysFont(None, 24)
 
-# Colors
-# Define a dictionary of colors for easier management
 COLORS = {
     "WHITE": (255, 255, 255),
     "BLACK": (0, 0, 0),
     "GRAY": (150, 150, 150),
-    "VISITED": (173, 216, 230),  # Light Blue for visited nodes
-    "PATH": (255, 255, 0),       # Yellow for path nodes
-    "START_NODE": (0, 200, 0),   # Green for the start node
-    "GOAL_NODE": (200, 0, 0)     # Red for the goal node
+    "LIGHT_GRAY": (200, 200, 200),
+    "CRIMSON": (220, 20, 60, 120),
+    "DARK_ORANGE": (255, 140, 0, 90),
+    "LIME_GREEN": (50, 205, 50, 90),
 }
 
 MARKER_COLOR = {
-    "in_path": (255, 50, 50),     # red
-    "explored": (255, 165, 0),    # orange
-    "in_open": (160, 32, 240)     # purple
+    "in_path": COLORS["CRIMSON"],
+    "explored": COLORS["DARK_ORANGE"],
+    "in_open": COLORS["LIME_GREEN"]
 }
 
 # Button settings
@@ -42,5 +40,8 @@ TILE_IMAGES = {
     "wall": pygame.image.load("assets/tiles/wall.png"),
     "start": pygame.image.load("assets/tiles/start.png"),
     "goal": pygame.image.load("assets/tiles/goal.png"),
-    "broken-wall": pygame.image.load("assets/tiles/broken_wall.png"),
+    "broken-wall": pygame.image.load("assets/tiles/broken_wall.png")
 }
+
+for key in TILE_IMAGES:
+    TILE_IMAGES[key] = pygame.transform.scale(TILE_IMAGES[key], (CELL_SIZE, CELL_SIZE))

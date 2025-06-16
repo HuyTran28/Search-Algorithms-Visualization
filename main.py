@@ -46,7 +46,7 @@ dropdown = Dropdown(
 
 # Interface buttons
 interface = Interface()
-interface.add_button((800, 240, 160, 40), (100, 100, 200), "Maze", regenerate_maze(grid))
+interface.add_button((800, 240, 160, 40), (100, 100, 200), "Maze", regenerate_maze(problem))
 interface.add_button((800, 120, 160, 40), (100, 200, 100), "Run", run_selected(problem, visual_step))
 
 # Main loop
@@ -65,7 +65,9 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             grid_selector.handle_event(event, event.pos)
             if event.button == 1:
-                dropdown.handle_event(event)
-                interface.handle_click(event.pos)
+                dropdown_consumed = dropdown.handle_event(event)
+
+                if not dropdown_consumed:
+                    interface.handle_click(event.pos)
     pygame.display.update()
 pygame.quit()
