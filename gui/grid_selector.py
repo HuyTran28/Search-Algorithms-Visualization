@@ -15,7 +15,7 @@ class GridSelector:
             clicked_row = mouse_y // CELL_SIZE
             clicked_node = self.grid.get_node(clicked_row, clicked_col)
 
-            if clicked_node:
+            if clicked_node and clicked_node.tile_type != "wall":
                 self.problem.grid.reset()
                 if event.button == 1:  # Left mouse button
                     self.problem.start = clicked_node

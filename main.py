@@ -3,15 +3,13 @@ import pygame
 pygame.init()
 
 from core.grid import Grid
-from core.problem import Problem
-
-from algorithms.base import search  
+from core.problem import Problem 
 
 from gui.interface import Interface, Dropdown
 from gui.renderer import draw_grid
 from gui.grid_selector import GridSelector
 
-from utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, BUTTON_WIDTH, ROWS, COLS, FONT
+from utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT, ROWS, COLS, FONT
 from algorithms.algorithms_registry import ALGORITHMS
 from utils.action import set_algorithm, regenerate_maze, run_selected
 
@@ -23,7 +21,7 @@ pygame.display.set_caption("Pathfinding Visualization")
 
 def visual_step():
     with draw_lock:
-        draw_grid(window, grid, CELL_SIZE, problem.start, problem.goal)
+        draw_grid(window, grid, problem.start, problem.goal)
 
 # Interface setup
 interface = Interface()
@@ -40,7 +38,7 @@ grid_selector = GridSelector(grid, problem)
 
 # Dropdown setup
 dropdown = Dropdown(
-    rect=(620, 50, 160, 40),
+    rect=(800, 50, 160, 40),
     options=[(name, name) for name in ALGORITHMS.keys()],
     font=FONT,
     on_select=set_algorithm
@@ -48,8 +46,8 @@ dropdown = Dropdown(
 
 # Interface buttons
 interface = Interface()
-interface.add_button((620, 240, 160, 40), (100, 100, 200), "Maze", regenerate_maze(grid))
-interface.add_button((620, 120, 160, 40), (100, 200, 100), "Run", run_selected(problem, visual_step))
+interface.add_button((800, 240, 160, 40), (100, 100, 200), "Maze", regenerate_maze(grid))
+interface.add_button((800, 120, 160, 40), (100, 200, 100), "Run", run_selected(problem, visual_step))
 
 # Main loop
 running = True
@@ -57,7 +55,7 @@ while running:
     window.fill((240, 240, 240))
 
     with draw_lock:
-        draw_grid(window, grid, CELL_SIZE, problem.start, problem.goal)
+        draw_grid(window, grid, problem.start, problem.goal)
     interface.draw(window, FONT)
     dropdown.draw(window)
 

@@ -1,9 +1,9 @@
 import pygame
 
 # Screen settings
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-GRID_SIZE = 600
+SCREEN_WIDTH = 1024
+SCREEN_HEIGHT = 768
+GRID_SIZE = 768
 ROWS = 40
 COLS = 40
 CELL_SIZE = GRID_SIZE // COLS
@@ -35,4 +35,12 @@ BUTTON_COLOR = {
     "clear": (200, 100, 100),
     "maze": (100, 100, 200),
     "dropdown": (180, 180, 255)
+}
+
+TILE_IMAGES = {
+    "grass": pygame.image.load("assets/tiles/grass.png"),
+    "wall": pygame.image.load("assets/tiles/wall.png"),
+    "start": pygame.image.load("assets/tiles/start.png"),
+    "goal": pygame.image.load("assets/tiles/goal.png"),
+    "broken-wall": pygame.image.load("assets/tiles/broken_wall.png"),
 }
