@@ -5,7 +5,7 @@ pygame.init()
 from core.grid import Grid
 from core.problem import Problem
 
-from algorithms.base import search  
+from algorithms.base import search
 
 from gui.interface import Interface, Dropdown
 from gui.renderer import draw_grid
