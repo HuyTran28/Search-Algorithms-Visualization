@@ -18,14 +18,18 @@ def draw_grid(screen, grid, start_node=None, goal_node=None):
             if tile_img:
                 screen.blit(tile_img, (x, y))
 
-            overlay = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
             if node.in_path:
+                overlay = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
                 overlay.fill(MARKER_COLOR["in_path"])
+                screen.blit(overlay, (x, y))
             elif node.explored:
+                overlay = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
                 overlay.fill(MARKER_COLOR["explored"])
+                screen.blit(overlay, (x, y))
             elif node.in_open:
+                overlay = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
                 overlay.fill(MARKER_COLOR["in_open"])
-            screen.blit(overlay, (x, y))
+                screen.blit(overlay, (x, y))
             
             # Draw start and goal markers
             if start_node is not None and node == start_node:

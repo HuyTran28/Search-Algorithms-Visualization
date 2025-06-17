@@ -1,73 +1,83 @@
 import pygame
+from streamlit import button
 
 pygame.init()
 
 from core.grid import Grid
 from core.problem import Problem 
 
-from gui.interface import Interface, Dropdown
+from gui.interface import Interface, Stepper
 from gui.renderer import draw_grid
 from gui.grid_selector import GridSelector
+from gui.search_result_display import SearchResultDisplay
 
 from utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT, ROWS, COLS, FONT
-from algorithms.algorithms_registry import ALGORITHMS
 from utils.action import set_algorithm, regenerate_maze, run_selected
+from utils.locks import draw_lock
 
-import threading
-draw_lock = threading.Lock()
+from algorithms.algorithms_registry import ALGORITHMS
 
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Pathfinding Visualization")
-
-def visual_step():
-    with draw_lock:
-        draw_grid(window, grid, problem.start, problem.goal)
-
-# Interface setup
-interface = Interface()
 
 # Create grid
 grid = Grid(ROWS, COLS)
 grid.generate_maze()
 
-# Set start and goal
 problem = Problem(grid, None, None)
 
-# NEW: Initialize the GridSelector, passing it the grid and problem objects
 grid_selector = GridSelector(grid, problem)
 
-# Dropdown setup
-dropdown = Dropdown(
-    rect=(800, 50, 160, 40),
+stepper = Stepper(
+    rect=(800, 50, 450, 60),
     options=[(name, name) for name in ALGORITHMS.keys()],
     font=FONT,
     on_select=set_algorithm
 )
 
+result_display = SearchResultDisplay(font=FONT, pos=(935, 350))
+
 # Interface buttons
 interface = Interface()
-interface.add_button((800, 240, 160, 40), (100, 100, 200), "Maze", regenerate_maze(problem))
-interface.add_button((800, 120, 160, 40), (100, 200, 100), "Run", run_selected(problem, visual_step))
+interface.add_button((935, 250, 180, 60), "Maze", regenerate_maze(problem))
+interface.add_button((935, 150, 180, 60), "Run", run_selected(window, problem))
 
 # Main loop
+algorithm_gen = None
 running = True
+
 while running:
     window.fill((240, 240, 240))
 
-    with draw_lock:
-        draw_grid(window, grid, problem.start, problem.goal)
+    # Advance the algorithm one step per frame if running
+    if algorithm_gen is not None:
+        try:
+            next(algorithm_gen)
+        except StopIteration as e:
+            algorithm_gen = None  # Algorithm finished
+            result_display.update(e.value)
+    else:
+        # Only draw the grid when not running the algorithm
+        with draw_lock:
+            draw_grid(window, grid, problem.start, problem.goal)
     interface.draw(window, FONT)
-    dropdown.draw(window)
+    stepper.draw(window)
+    result_display.draw(window)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            grid_selector.handle_event(event, event.pos)
+            if event.button in (4, 5) or algorithm_gen is not None:
+                continue  # Ignore scroll events or clicks while running
+            with draw_lock:
+                grid_selector.handle_event(event, event.pos)
             if event.button == 1:
-                dropdown_consumed = dropdown.handle_event(event)
-
-                if not dropdown_consumed:
+                stepper_consumed = stepper.handle_event(event)
+                if not stepper_consumed:
+                    if interface.get_button_at(event.pos) == "Run":
+                        result_display.reset()
+                        algorithm_gen = run_selected(window, problem)()
                     interface.handle_click(event.pos)
     pygame.display.update()
 pygame.quit()

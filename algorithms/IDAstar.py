@@ -21,8 +21,9 @@ def DFS_Contour(problem, node, f_limit, step_callback, explored_count):
         neighbor.explored = True
 
         step_callback()
+        yield
 
-        result, f_new, explored_count = DFS_Contour(problem, neighbor, f_limit, step_callback, explored_count + 1)
+        result, f_new, explored_count = yield from DFS_Contour(problem, neighbor, f_limit, step_callback, explored_count + 1)
         if result is not None:
             return result, f_limit, explored_count
         f_next = min(f_next, f_new)
@@ -31,6 +32,7 @@ def DFS_Contour(problem, node, f_limit, step_callback, explored_count):
         neighbor.parent = None
 
         step_callback()
+        yield
 
     return None, f_next, explored_count
 
@@ -44,18 +46,22 @@ def IDAstar(problem, step_callback, f_max=100000):
     start.explored = True
 
     f_limit = start.f
+    total_explored_count = 0
 
     while True:
-        
-        result, new_limit, explored_count = DFS_Contour(problem, start, f_limit, step_callback, 0)
+        result, new_limit, explored_count = yield from DFS_Contour(problem, start, f_limit, step_callback, 0)
+        total_explored_count += explored_count
 
         if result is not None:
             path, cost = reconstruct_path(result)
             for node in path:
                 node.in_path = True
                 step_callback()
-            return path, explored_count, cost
-        if new_limit == f_max or new_limit == float('inf'):
-            return None, explored_count, 0
+                yield
+            yield (total_explored_count, cost)
+            return
+        if new_limit == f_max:
+            yield (total_explored_count, 0)
+            return
         f_limit = new_limit
         

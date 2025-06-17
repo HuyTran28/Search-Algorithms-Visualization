@@ -13,6 +13,7 @@ def dfs(problem, step_callback):
         node.explored = True
         explored_count[0] += 1
         step_callback()
+        yield
 
         if problem.is_goal(node):
             path_found[0] = True
@@ -22,21 +23,25 @@ def dfs(problem, step_callback):
             if not neighbor.explored and not path_found[0]:
                 neighbor.parent = node
                 neighbor.g = node.g + neighbor.cost
-                df(neighbor)
+                yield from df(neighbor)
 
         # Backtrack (only clear highlight if not part of final path)
         if not path_found[0]:
             node.explored = False
             step_callback()
+            yield
 
     start.g = 0
-    df(start)
+    yield from df(start)
 
     if path_found[0]:
         path, cost = reconstruct_path(goal)
         for node in path:
             node.in_path = True
             step_callback()
-        return path, explored_count[0], cost
+            yield
+        yield (explored_count[0], cost)
+        return
 
-    return None, explored_count[0], 0
+    yield (None, explored_count[0], 0)
+    

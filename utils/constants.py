@@ -1,13 +1,13 @@
 import pygame
 
 # Screen settings
-SCREEN_WIDTH = 1024
+SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 768
 GRID_SIZE = 768
 ROWS = 40
 COLS = 40
 CELL_SIZE = GRID_SIZE // COLS
-FONT = pygame.font.SysFont(None, 24)
+FONT = pygame.font.Font("assets/fonts/kenney_pixel.ttf", 40)
 
 COLORS = {
     "WHITE": (255, 255, 255),
@@ -45,3 +45,11 @@ TILE_IMAGES = {
 
 for key in TILE_IMAGES:
     TILE_IMAGES[key] = pygame.transform.scale(TILE_IMAGES[key], (CELL_SIZE, CELL_SIZE))
+
+# Button UI assets
+BUTTON_PARTS = {
+    "left": pygame.image.load("assets/ui/button_left.png"),
+    "center": pygame.image.load("assets/ui/button_center.png"),
+    "right": pygame.image.load("assets/ui/button_right.png"),
+    "arrow": pygame.image.load("assets/ui/button_arrow.png")
+}

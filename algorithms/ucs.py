@@ -19,14 +19,17 @@ def UCS(problem, step_callback):
         current.explored = True
         explored_count += 1
         step_callback()
+        yield
 
         if problem.is_goal(current):
             path, cost = reconstruct_path(current)
             for node in path:
                 node.in_path = True
                 step_callback()
-            return path, explored_count, cost
-        
+                yield
+            yield (explored_count, cost)
+            return
+
         for neighbor in problem.get_neighbors(current):
             tentative_g = current.g + neighbor.cost
 
@@ -40,5 +43,6 @@ def UCS(problem, step_callback):
                     neighbor.in_open = True
 
         step_callback()
+        yield
 
-    return None, explored_count, 0
+    yield (explored_count, 0)

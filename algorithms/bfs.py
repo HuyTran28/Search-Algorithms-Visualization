@@ -15,17 +15,22 @@ def bfs(problem, step_callback):
         current = frontier.popleft()
         explored.add(current)
         current.explored = True
+        current.in_open = False
         explored_count += 1
 
         step_callback()
+        yield
 
         if problem.is_goal(current):
             path, cost = reconstruct_path(current)
             for node in path:
                 node.in_path = True
+                node.explored = False
                 step_callback()
+                yield
             goal.in_path = True
-            return path, explored_count, cost
+            yield (explored_count, cost)
+            return
 
         for neighbor in problem.get_neighbors(current):
             if neighbor not in explored and neighbor not in frontier:
@@ -35,5 +40,6 @@ def bfs(problem, step_callback):
                 neighbor.in_open = True
 
         step_callback()
+        yield
 
-    return None, explored_count, 0
+    yield (explored_count, 0)
