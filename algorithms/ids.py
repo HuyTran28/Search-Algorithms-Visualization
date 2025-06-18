@@ -60,4 +60,4 @@ def ids(problem, step_callback, max_depth=10000):
             print("Found solution at depth", depth)
             yield (total_explored_count, cost)
             return
-    yield (None, 0)
+    yield (total_explored_count, 0)
