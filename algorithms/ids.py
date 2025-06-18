@@ -46,14 +46,18 @@ def dls(problem, step_callback, depth_limit):
             yield
         goal.in_path = True
         yield (explored_count, cost)
-        return
+        return explored_count, cost
 
-    yield (None, 0)
+    yield (explored_count, 0)
+    return explored_count, 0
 
-def ids(problem, step_callback, max_depth=1000):
+def ids(problem, step_callback, max_depth=10000):
+    total_explored_count = 0
     for depth in range(max_depth):
-        result = yield from dls(problem, step_callback, depth)
-        if result is not None and result[0] is not None:
-            yield result
+        explored_count, cost = yield from dls(problem, step_callback, depth)
+        total_explored_count += explored_count
+        if cost != 0:
+            print("Found solution at depth", depth)
+            yield (total_explored_count, cost)
             return
     yield (None, 0)
