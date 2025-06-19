@@ -5,6 +5,7 @@ from algorithms.ids import ids
 from algorithms.ucs import UCS
 from algorithms.dfs import dfs
 from algorithms.Bi_directionalSearch import bidirectional_search
+from algorithms.beamSearch import beam_search
 
 ALGORITHMS = {
     "A*": astar,
@@ -14,4 +15,5 @@ ALGORITHMS = {
     "BFS": bfs,
     "IDS": ids,
     "DFS": dfs,
+    "Beam Search": beam_search,
 }

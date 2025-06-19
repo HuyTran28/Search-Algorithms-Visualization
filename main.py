@@ -1,5 +1,4 @@
 import pygame
-from streamlit import button
 
 pygame.init()
 
