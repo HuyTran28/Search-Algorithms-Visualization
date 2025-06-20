@@ -6,8 +6,9 @@ def bidirectional_search(problem, step_callback):
     goal = problem.goal
 
     if start == goal:
-        return [start], 0, 0
-
+        yield (2, 0)
+        return 
+    
     frontier_start = deque([start])
     frontier_goal = deque([goal])
 
@@ -38,6 +39,10 @@ def bidirectional_search(problem, step_callback):
 
                 if neighbor in visited_goal:
                     meeting_node = neighbor
+                    neighbor.explored = True
+                    explored_count += 1
+                    step_callback()
+                    yield
                     break
 
         if meeting_node:
@@ -59,6 +64,10 @@ def bidirectional_search(problem, step_callback):
 
                 if neighbor in visited_start:
                     meeting_node = neighbor
+                    neighbor.explored = True
+                    explored_count += 1
+                    step_callback()
+                    yield
                     break
 
         if meeting_node:

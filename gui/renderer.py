@@ -1,45 +1,43 @@
 import pygame
-from utils.constants import COLORS
-from utils.constants import TILE_IMAGES, COLORS, MARKER_COLOR, CELL_SIZE
+from utils.constants import TILE_IMAGES, COLORS, MARKER_COLOR, CELL_SIZE, TILE_GRASS, TILE_WALL, TILE_BROKEN_WALL
 
+def draw_grid(window, grid, start_node=None, goal_node=None):
+    overlay_cache = {}
 
-def draw_grid(screen, grid, start_node=None, goal_node=None):
+    def get_overlay(color_key):
+        if color_key not in overlay_cache:
+            surf = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
+            surf.fill(MARKER_COLOR[color_key])
+            overlay_cache[color_key] = surf
+        return overlay_cache[color_key]
+
     for row in grid.grid:
         for node in row:
-            x = node.col * CELL_SIZE
-            y = node.row * CELL_SIZE
+            x, y = node.col * CELL_SIZE, node.row * CELL_SIZE
 
-            # Draw base terrain color
-            if node.tile_type == "wall" and node.in_path:
-                tile_img = TILE_IMAGES.get("broken-wall")
-            else:
-                tile_img = TILE_IMAGES.get(node.tile_type)
-
+            # Draw base tile
+            tile_key = TILE_BROKEN_WALL if node.tile_type == TILE_WALL and node.in_path else node.tile_type
+            tile_img = TILE_IMAGES.get(tile_key)
             if tile_img:
-                screen.blit(tile_img, (x, y))
+                window.blit(tile_img, (x, y))
 
+            # Draw overlays for path, explored, open
             if node.in_path:
-                overlay = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
-                overlay.fill(MARKER_COLOR["in_path"])
-                screen.blit(overlay, (x, y))
+                window.blit(get_overlay("in_path"), (x, y))
             elif node.explored:
-                overlay = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
-                overlay.fill(MARKER_COLOR["explored"])
-                screen.blit(overlay, (x, y))
+                window.blit(get_overlay("explored"), (x, y))
             elif node.in_open:
-                overlay = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
-                overlay.fill(MARKER_COLOR["in_open"])
-                screen.blit(overlay, (x, y))
-            
+                window.blit(get_overlay("in_open"), (x, y))
+
             # Draw start and goal markers
             if start_node is not None and node == start_node:
-                tile_img = TILE_IMAGES.get("start")
-                if tile_img:
-                    screen.blit(tile_img, (x, y))
+                start_img = TILE_IMAGES.get("start")
+                if start_img:
+                    window.blit(start_img, (x, y))
             if goal_node is not None and node == goal_node:
-                tile_img = TILE_IMAGES.get("goal")
-                if tile_img:
-                    screen.blit(tile_img, (x, y))
+                goal_img = TILE_IMAGES.get("goal")
+                if goal_img:
+                    window.blit(goal_img, (x, y))
 
             # Draw grid border
-            pygame.draw.rect(screen, COLORS["LIGHT_GRAY"], (x, y, CELL_SIZE, CELL_SIZE), 1)
+            pygame.draw.rect(window, COLORS["LIGHT_GRAY"], (x, y, CELL_SIZE, CELL_SIZE), 1)

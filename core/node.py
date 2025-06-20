@@ -1,3 +1,5 @@
+from utils.constants import COST_MAP
+
 class Node:
     def __init__(self, row, col, tile_type="grass"):
         self.row = row
@@ -25,11 +27,7 @@ class Node:
         self.cost = self.get_cost_from_tile(value)
 
     def get_cost_from_tile(self, tile_type):
-        cost_map = {
-            "grass": 1,
-            "wall": 10
-        }
-        return cost_map.get(tile_type, 1)
+        return COST_MAP.get(tile_type, 1)
 
     def get_pos(self):
         return (self.col, self.row)

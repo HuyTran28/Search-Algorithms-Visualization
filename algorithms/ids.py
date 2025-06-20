@@ -6,8 +6,11 @@ def dls(problem, step_callback, depth_limit):
 
     start.g = 0
     start.explored = True
+    path = None
 
     def recursive_dls(node, depth, explored_count):
+        explored_count += 1
+
         if problem.is_goal(node):
             return node, explored_count
 
@@ -25,7 +28,7 @@ def dls(problem, step_callback, depth_limit):
             step_callback()
             yield
 
-            result, explored_count = yield from recursive_dls(neighbor, depth - 1, explored_count + 1)
+            result, explored_count = yield from recursive_dls(neighbor, depth - 1, explored_count)
             if result is not None:
                 return result, explored_count
 
@@ -52,7 +55,7 @@ def dls(problem, step_callback, depth_limit):
     return path, explored_count, 0
 
 def ids(problem, step_callback, max_depth=1000):
-    total_explored_count = 1
+    total_explored_count = 0
     for depth in range(max_depth):
         path, explored_count, cost = yield from dls(problem, step_callback, depth)
         total_explored_count += explored_count

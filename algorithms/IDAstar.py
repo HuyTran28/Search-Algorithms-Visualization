@@ -4,6 +4,7 @@ def Manhattan_distance(n1, n2):
     return abs(n1.row - n2.row) + abs(n1.col - n2.col)
 
 def DFS_Contour(problem, node, f_limit, step_callback, explored_count):
+    explored_count += 1
     if node.f > f_limit:
         return None, node.f, explored_count
     
@@ -23,7 +24,7 @@ def DFS_Contour(problem, node, f_limit, step_callback, explored_count):
         step_callback()
         yield
 
-        result, f_new, explored_count = yield from DFS_Contour(problem, neighbor, f_limit, step_callback, explored_count + 1)
+        result, f_new, explored_count = yield from DFS_Contour(problem, neighbor, f_limit, step_callback, explored_count)
         if result is not None:
             return result, f_limit, explored_count
         f_next = min(f_next, f_new)

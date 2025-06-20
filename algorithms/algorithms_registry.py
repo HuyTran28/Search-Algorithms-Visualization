@@ -1,4 +1,4 @@
-from algorithms.astar import astar
+from algorithms.Astar import astar
 from algorithms.IDAstar import IDAstar
 from algorithms.bfs import bfs
 from algorithms.ids import ids
