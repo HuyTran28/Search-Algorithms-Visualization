@@ -47,7 +47,7 @@ def IDAstar(problem, step_callback, f_max=100000):
     start.explored = True
 
     f_limit = start.f
-    total_explored_count = 1
+    total_explored_count = 0
 
     while True:
         result, new_limit, explored_count = yield from DFS_Contour(problem, start, f_limit, step_callback, 0)
