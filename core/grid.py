@@ -3,6 +3,24 @@ from random import shuffle
 from utils.constants import TILE_WALL, TILE_GRASS
 
 class Grid:
+    """
+    Represents a 2D grid of nodes for pathfinding and maze generation.
+    Attributes:
+        rows (int): Number of rows in the grid.
+        cols (int): Number of columns in the grid.
+        grid (list[list[Node]]): 2D list containing Node objects.
+    Methods:
+        __init__(rows, cols):
+            Initializes the grid with the specified number of rows and columns, creating Node objects for each cell.
+        reset():
+            Resets all nodes in the grid to their initial state, clearing pathfinding and visualization attributes.
+        get_node(row, col):
+            Returns the Node object at the specified row and column.
+        get_neighbors(node):
+            Returns a list of neighboring Node objects (up, down, left, right) for the given node.
+        generate_maze():
+            Generates a random maze using a randomized version of Kruskal's algorithm, modifying node tile types to represent walls and paths.
+    """
     def __init__(self, rows, cols):
         self.rows = rows
         self.cols = cols
@@ -32,6 +50,18 @@ class Grid:
         return neighbors
 
     def generate_maze(self):
+        """
+        Generates a random maze within the grid using a randomized version of Kruskal's algorithm.
+        The algorithm works as follows:
+        1. Fills the entire grid with wall tiles.
+        2. Marks every cell at even coordinates as a potential maze cell and initializes a disjoint-set (union-find) structure for them.
+        3. Collects all possible walls between adjacent cells (either horizontally or vertically).
+        4. Randomly shuffles the list of walls.
+        5. Iterates through the shuffled walls, and for each wall, checks if the cells it separates are in different sets.
+           - If so, removes the wall and merges the sets, ensuring there is a path between the two cells.
+        6. The result is a perfect maze (i.e., a maze with one unique path between any two cells and no cycles).
+        This method modifies the grid in-place, setting the appropriate tile types for walls and paths.
+        """
         # Fill grid with walls
         for row in self.grid:
             for node in row:

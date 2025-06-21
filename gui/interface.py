@@ -2,6 +2,30 @@ import pygame
 from utils.constants import COLORS, BUTTON_PARTS
 
 class Interface:
+    """
+    A class to manage and render interactive buttons in a graphical user interface using pygame.
+    Attributes:
+        buttons (list): A list of dictionaries, each representing a button with its properties.
+        images (dict): A dictionary mapping button part names to their corresponding pygame.Surface images.
+    Methods:
+        __init__():
+            Initializes the Interface, loading button part images and preparing the button list.
+        add_button(rect, text, action):
+            Adds a new button to the interface.
+            Args:
+                rect (tuple or pygame.Rect): The position and size of the button.
+                text (str): The label to display on the button.
+                action (callable): The function to call when the button is clicked.
+        handle_click(pos):
+            Handles a mouse click event, triggering the action of the button under the given position.
+            Args:
+                pos (tuple): The (x, y) position of the mouse click.
+        draw(window, font):
+            Draws all buttons on the given window surface, updating their visual state based on mouse interaction.
+            Args:
+                window (pygame.Surface): The surface to draw the buttons on.
+                font (pygame.font.Font): The font to use for button text.
+    """
     def __init__(self):
         self.buttons = []
         self.images = {part: BUTTON_PARTS[part].convert_alpha() for part in BUTTON_PARTS}
@@ -47,6 +71,23 @@ class Interface:
             )
 
 class Stepper:
+    """
+    A UI component for selecting between multiple options using left and right arrow buttons.
+    Attributes:
+        rect (pygame.Rect): The rectangle defining the position and size of the stepper.
+        options (list): A list of tuples representing selectable options. Each tuple should be (display_text, value).
+        font (pygame.font.Font): The font used to render the option labels and arrows.
+        on_select (callable): A callback function called with the value of the selected option when changed.
+        index (int): The current selected option index.
+        images (dict): A dictionary of button part images used for rendering.
+    Methods:
+        handle_event(event):
+            Handles pygame events, updating the selected option when the left or right arrow is clicked.
+        draw(window):
+            Draws the stepper component (arrows and label) onto the given window surface.
+        draw_arrow_rect(window, rect, arrow_left, hovered=False, pressed=False):
+            Draws an arrow button (left or right) at the specified rectangle, with visual feedback for hover and press states.
+    """
     def __init__(self, rect, options, font, on_select):
         self.rect = pygame.Rect(rect)
         self.options = options

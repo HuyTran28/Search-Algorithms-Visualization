@@ -44,9 +44,22 @@ result_display = SearchResultDisplay(font=FONT, pos=RESULT_DISPLAY_POS)
 
 # Interface buttons
 interface = Interface()
-interface.add_button(MAZE_BUTTON_RECT, "Maze", regenerate_maze(problem))
+interface.add_button(MAZE_BUTTON_RECT, "Maze", lambda: regenerate_maze(problem))
 
 def on_run_click():
+    """
+    Handles the event when the 'Run' button is clicked.
+
+    This function resets the result display and initializes the algorithm generator
+    based on the currently selected algorithm and problem. It updates the global
+    'algorithm_gen' variable with the generator returned by the selected algorithm.
+
+    Globals:
+        algorithm_gen: The generator object for the selected algorithm.
+
+    Side Effects:
+        Resets the result display and updates the global algorithm generator.
+    """
     global algorithm_gen
     result_display.reset()
     algorithm_gen = run_selected(virtual_surface, problem)()
@@ -89,7 +102,7 @@ while running:
     result_display.draw(virtual_surface)
 
     current_width, current_height = window.get_size()
-    scaled_surface = pygame.transform.scale(virtual_surface, (current_width, current_height))
+    scaled_surface = pygame.transform.smoothscale(virtual_surface, (current_width, current_height))
     window.blit(scaled_surface, (0, 0))
     pygame.display.update()
     

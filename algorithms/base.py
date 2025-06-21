@@ -4,6 +4,20 @@ from core.result import SearchResult
 import time, tracemalloc
 
 def search(problem, algorithm="A*", draw_fn=None):
+    """
+    Executes a search algorithm on the given problem, supporting step-by-step visualization.
+    Args:
+        problem: The problem instance to solve. Must be compatible with the selected algorithm.
+        algorithm (str, optional): The name of the search algorithm to use (e.g., "A*"). Defaults to "A*".
+        draw_fn (callable): A function to call for visualization at each step. Required.
+    Yields:
+        None: Yields control at each step of the algorithm for visualization.
+    Returns:
+        SearchResult: An object containing the number of explored nodes, the cost of the solution,
+                      the elapsed time in milliseconds, and the peak memory usage in kilobytes.
+    Raises:
+        ValueError: If draw_fn is not provided or if the specified algorithm is unknown.
+    """
     if draw_fn is None:
         raise ValueError("draw_fn is required for visualization")
 

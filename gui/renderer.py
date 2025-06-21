@@ -2,6 +2,19 @@ import pygame
 from utils.constants import TILE_IMAGES, COLORS, MARKER_COLOR, CELL_SIZE, TILE_GRASS, TILE_WALL, TILE_BROKEN_WALL
 
 def draw_grid(window, grid, start_node=None, goal_node=None):
+    """
+    Draws the grid and overlays onto the given Pygame window surface.
+    Args:
+        window (pygame.Surface): The Pygame surface to draw the grid on.
+        grid (Grid): The grid object containing nodes to be rendered.
+        start_node (Node, optional): The node representing the start position. Defaults to None.
+        goal_node (Node, optional): The node representing the goal position. Defaults to None.
+    Details:
+        - Renders each node's base tile image according to its type.
+        - Overlays visual markers for nodes that are in the path, explored, or in the open set.
+        - Draws special markers for the start and goal nodes if provided.
+        - Draws a light gray border around each cell for grid visibility.
+    """
     overlay_cache = {}
 
     def get_overlay(color_key):

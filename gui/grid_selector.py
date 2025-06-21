@@ -2,6 +2,20 @@ from utils.constants import CELL_SIZE, ROWS, COLS, TILE_WALL
 
 
 class GridSelector:
+    """
+    GridSelector is responsible for handling user interactions with the grid in a search algorithm visualization tool.
+    Attributes:
+        problem: An instance representing the current search problem, containing the grid and start/goal nodes.
+    Methods:
+        __init__(problem):
+            Initializes the GridSelector with the given problem instance.
+        handle_event(event, mouse_pos):
+            Handles mouse events to select start or goal nodes on the grid.
+            - If the left mouse button is clicked on a valid, non-wall node, sets it as the start node.
+            - If the right mouse button is clicked on a valid, non-wall node, sets it as the goal node.
+            - Ignores clicks outside the grid or on wall nodes.
+            - Resets the grid before updating the start or goal node.
+    """
     def __init__(self, problem):
         self.problem = problem
 

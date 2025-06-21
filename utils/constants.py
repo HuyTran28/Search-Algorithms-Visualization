@@ -1,9 +1,33 @@
 import pygame
+"""
+This module defines constants and assets for the Search Algorithms Visualization application.
+Attributes:
+    SCREEN_WIDTH (int): Width of the application window in pixels.
+    SCREEN_HEIGHT (int): Height of the application window in pixels.
+    GRID_SIZE (int): Size of the grid area in pixels.
+    ROWS (int): Number of rows in the grid.
+    COLS (int): Number of columns in the grid.
+    CELL_SIZE (int): Size of each cell in the grid in pixels.
+    FONT (pygame.font.Font): Font object used for rendering text.
+    COLORS (dict): Dictionary mapping color names to RGBA tuples.
+    BG_COLOR (tuple): Background color of the application.
+    MARKER_COLOR (dict): Dictionary mapping marker types to color tuples.
+    STEPPER_RECT (tuple): Rectangle for the stepper UI component.
+    RESULT_DISPLAY_POS (tuple): Position for displaying results.
+    MAZE_BUTTON_RECT (tuple): Rectangle for the maze generation button.
+    RUN_BUTTON_RECT (tuple): Rectangle for the run button.
+    TILE_WALL (str): Identifier for wall tiles.
+    TILE_GRASS (str): Identifier for grass tiles.
+    TILE_BROKEN_WALL (str): Identifier for broken wall tiles.
+    TILE_IMAGES (dict): Dictionary mapping tile types to their loaded and scaled pygame images.
+    BUTTON_PARTS (dict): Dictionary mapping button UI parts to their loaded pygame images.
+    COST_MAP (dict): Dictionary mapping tile types to their traversal costs.
+"""
 
 # Screen settings
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 768
-GRID_SIZE = 768
+GRID_SIZE = 760
 ROWS = 40
 COLS = 40
 CELL_SIZE = GRID_SIZE // COLS
@@ -13,10 +37,10 @@ FONT = pygame.font.Font("assets/fonts/kenney_pixel.ttf", 40)
 
 # Colors
 COLORS = {
-    "WHITE": (240, 240, 240),
-    "BLACK": (0, 0, 0),
-    "GRAY": (150, 150, 150),
-    "LIGHT_GRAY": (200, 200, 200),
+    "WHITE": (240, 240, 240, 255),
+    "BLACK": (0, 0, 0, 255),
+    "GRAY": (150, 150, 150, 255),
+    "LIGHT_GRAY": (200, 200, 200, 255),
     "CRIMSON": (220, 20, 60, 90),
     "DODGER_BLUE": (138, 43, 226, 90),
     "LIME_GREEN": (50, 205, 50, 90),
@@ -31,10 +55,10 @@ MARKER_COLOR = {
 }
 
 # UI Layout
-STEPPER_RECT = (800, 50, 450, 60)
-RESULT_DISPLAY_POS = (935, 350)
-MAZE_BUTTON_RECT = (935, 250, 180, 60)
-RUN_BUTTON_RECT = (935, 150, 180, 60)
+STEPPER_RECT = (800, 150, 450, 60)
+RESULT_DISPLAY_POS = (900, 450)
+MAZE_BUTTON_RECT = (935, 350, 180, 60)
+RUN_BUTTON_RECT = (935, 250, 180, 60)
 
 # Tile types
 TILE_WALL = "wall"
