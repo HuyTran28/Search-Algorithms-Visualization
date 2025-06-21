@@ -44,7 +44,7 @@ result_display = SearchResultDisplay(font=FONT, pos=RESULT_DISPLAY_POS)
 
 # Interface buttons
 interface = Interface()
-interface.add_button(MAZE_BUTTON_RECT, "Maze", lambda: regenerate_maze(problem))
+interface.add_button(MAZE_BUTTON_RECT, "Maze", regenerate_maze(problem))
 
 def on_run_click():
     """
