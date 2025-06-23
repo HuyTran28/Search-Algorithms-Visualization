@@ -12,9 +12,9 @@ This project is a visualization tool for various pathfinding and search algorith
   - Iterative Deepening A* (IDA*)
   - Beam Search
   - Bidirectional Search
-- Interactive grid editor: set start, goal, and wall tiles
+- Interactive grid editor: set start, goal
 - Maze generation for randomized challenges
-- Step-by-step or full-run visualization
+- Full-run visualization
 - Algorithm selection and result display
 
 ## Directory Structure
@@ -32,7 +32,7 @@ This project is a visualization tool for various pathfinding and search algorith
 ## Installation
 1. Clone the repository:
    ```sh
-   git clone <repo-url>
+   git clone https://github.com/HuyTran28/Search-Algorithms-Visualization
    cd Search-Algorithms-Visualization
    ```
 2. Install dependencies:
@@ -47,7 +47,7 @@ python main.py
 ```
 
 - Use the interface to select an algorithm, generate a maze, and run the visualization.
-- Interact with the grid to set start, goal, and wall tiles.
+- Interact with the grid to set start and goal.
 
 ## License
 This project is for educational and demonstration purposes.
